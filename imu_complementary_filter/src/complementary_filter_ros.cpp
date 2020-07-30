@@ -235,6 +235,10 @@ void ComplementaryFilterROS::publish(
   boost::shared_ptr<sensor_msgs::Imu> imu_msg =
       boost::make_shared<sensor_msgs::Imu>(*imu_msg_raw);
   tf::quaternionTFToMsg(q, imu_msg->orientation);
+  imu_msg->orientation.w = q1; // q0
+  imu_msg->orientation.x = -q0; // q2
+  imu_msg->orientation.y = q3; // q1
+  imu_msg->orientation.z = -q2; // q3
 
   imu_msg->orientation_covariance[0] = orientation_variance_;
   imu_msg->orientation_covariance[1] = 0.0;

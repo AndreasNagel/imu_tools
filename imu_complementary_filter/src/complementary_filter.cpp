@@ -37,12 +37,12 @@
 
 namespace imu_tools {
 
-const double ComplementaryFilter::kGravity = 9.81;
+const double ComplementaryFilter::kGravity = 9.80665;
 const double ComplementaryFilter::gamma_ = 0.01;
 // Bias estimation steady state thresholds
-const double ComplementaryFilter::kAngularVelocityThreshold = 0.2;
+const double ComplementaryFilter::kAngularVelocityThreshold = 0.01;
 const double ComplementaryFilter::kAccelerationThreshold = 0.1;
-const double ComplementaryFilter::kDeltaAngularVelocityThreshold = 0.01;
+const double ComplementaryFilter::kDeltaAngularVelocityThreshold = 0.005;
 
 ComplementaryFilter::ComplementaryFilter() :
     gain_acc_(0.01),
@@ -455,8 +455,8 @@ double ComplementaryFilter::getAdaptiveGain(double alpha, double ax, double ay, 
   double a_mag = sqrt(ax*ax + ay*ay + az*az);
   double error = fabs(a_mag - kGravity)/kGravity;
   double factor;
-  double error1 = 0.1;
-  double error2 = 0.2;
+  double error1 = 0.01;
+  double error2 = 0.1;
   double m = 1.0/(error1 - error2);
   double b = 1.0 - m*error1;
   if (error < error1)
@@ -465,7 +465,7 @@ double ComplementaryFilter::getAdaptiveGain(double alpha, double ax, double ay, 
     factor = m*error + b;
   else 
     factor = 0.0;
-  //printf("FACTOR: %f \n", factor);
+  // printf("FACTOR: %f \n", factor);
   return factor*alpha;
 }
 
